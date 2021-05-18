@@ -1,0 +1,73 @@
+// C++ code
+//
+#include <LiquidCrystal.h>      //Inkluderer LCD bibliotek
+const int rs = 13, en = 12, d4 = 11, d5 = 10, d6 = 9, d7 = 8;//Her endrer du pinnene for LCDskjerm
+LiquidCrystal LCD(rs, en, d4, d5, d6, d7);    //Initialisere LCD koblingspunkt
+
+int Teller = 0;
+
+int Btn1 = 0;
+
+int BtnState = 0;
+
+int BtnStateLast = 0;
+
+void setup()
+{
+  pinMode(2, INPUT);
+  pinMode(3, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(5, OUTPUT);
+  Serial.begin(9600);
+  LCD.begin(16, 2);
+  LCD.clear();
+
+}
+
+void loop()
+{
+  Btn1 = digitalRead(2);
+  if (Btn1 == HIGH) {
+    BtnState = HIGH;
+    if (BtnState != BtnStateLast) {
+      BtnStateLast = BtnState;
+      Teller = (Teller + 1);
+      if (Teller > 4) {
+        Teller = 1;
+      }
+    }
+  } else {
+    BtnState = LOW;
+    BtnStateLast = LOW;
+  }
+  if (Teller == 1) {
+    analogWrite(3, 51);
+    analogWrite(6, 204);
+    analogWrite(5, 0);
+    LCD.setCursor(0,0);
+    LCD.print("Groenn  ");
+  }
+  if (Teller == 2) {
+    analogWrite(3, 255);
+    analogWrite(6, 0);
+    analogWrite(5, 0);
+    LCD.setCursor(0,0);
+      LCD.print("Roed     ");
+  }
+  if (Teller == 3) {
+    analogWrite(3, 51);
+    analogWrite(6, 51);
+    analogWrite(5, 255);
+    LCD.setCursor(0,0);
+      LCD.print("Blaa     ");
+  }
+  if (Teller == 4) {
+    analogWrite(3, 153);
+    analogWrite(6, 51);
+    analogWrite(5, 153);
+    LCD.setCursor(0,0);
+      LCD.print("Lilla  ");
+  }
+  Serial.println(Teller);
+  delay(10); // Delay a little bit to improve simulation performance
+}
